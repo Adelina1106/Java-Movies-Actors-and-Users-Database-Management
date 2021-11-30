@@ -27,13 +27,7 @@ public class Rating extends VideoQuery {
         sortByRating(ratingVideos);
         if (actionInputData.getSortType().equals("desc"))
             Collections.reverse(ratingVideos);
-        ratingVideos.removeIf((show) -> show.getRating() == 0);
-        for (Show show : movies)
-            if (show.getRating().isNaN() || show.getRating() < 1d)
-                ratingVideos.remove(show);
-        for (Show show : serials)
-            if (show.getRating().isNaN() || show.getRating() < 1d)
-                ratingVideos.remove(show);
+        ratingVideos.removeIf((show) -> show.getRating().isNaN() || show.getRating() < 1d);
         ArrayList<Show> ratings = new ArrayList<>();
         if (actionInputData.getNumber() < ratingVideos.size() + 1)
             for (int i = 0; i < actionInputData.getNumber(); i++)

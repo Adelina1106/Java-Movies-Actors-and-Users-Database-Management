@@ -23,7 +23,6 @@ public class Award extends QueryActor {
         awardsActors.removeIf((actor) -> actor.getTotalAwards(actionInputData) == 0);
         if (actionInputData.getSortType().equals("desc"))
             Collections.reverse(awardsActors);
-        awardsActors.removeIf(actor -> actor.getTotalAwards(actionInputData) == 0);
         return awardsActors;
     }
 

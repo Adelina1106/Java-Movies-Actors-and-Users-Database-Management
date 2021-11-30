@@ -9,6 +9,7 @@ import fileio.ActionInputData;
 import fileio.Input;
 import fileio.Writer;
 import org.json.simple.JSONArray;
+import recommandations.*;
 import users.User;
 import videos.Movie;
 import videos.Serial;
@@ -133,8 +134,29 @@ public class Platform {
                             break;
                         default:
                             break;
+
                     }
-            }
+            } else if (actionInputData.getActionType().equals("recommendation"))
+                switch (actionInputData.getType()) {
+                    case "standard":
+                        resultArray.add(Standard.standardRecommendation(users, movies, serials, actionInputData, writer));
+                        break;
+                    case "best_unseen":
+                        resultArray.add(BestUnseen.BestUnseenRecommendation(users, movies, serials, actionInputData, writer));
+                        break;
+                    case "popular":
+                        resultArray.add(Popular.PopularRecommendation(users, movies, serials, actionInputData, writer));
+                        break;
+                    case "favorite":
+                        resultArray.add(Favorite.favoriteRecommendation(users, movies, serials, actionInputData, writer));
+                        break;
+                    case "search":
+                        resultArray.add(Search.searchRecommendation(users, movies, serials, actionInputData, writer));
+                        break;
+                    default:
+                        break;
+                }
+
 
     }
 }

@@ -55,7 +55,7 @@ public class Rating{
         String message;
         if (!user.getHistory().containsKey(show.getTitle()))
             message = "error -> " + show.getTitle() + " is not seen";
-        else if (!user.getRatings().containsKey(show.getTitle())) {
+        else if (!user.getRatings().containsKey(show.getTitle()) && !user.getRatings().containsKey(show.getTitle() + actionInputData.getSeasonNumber()) ) {
             if (movies.contains(show))
                 rating.ratingShow(user, (Movie) show, actionInputData.getGrade());
             else rating.ratingShow(user, (Serial) show, actionInputData.getGrade(), actionInputData.getSeasonNumber());

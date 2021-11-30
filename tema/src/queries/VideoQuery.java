@@ -14,14 +14,14 @@ public class VideoQuery {
         ratingVideos.sort(new Comparator<>() {
             @Override
             public int compare(Show show1, Show show2) {
-                if (!Objects.equals(show1.getRating(), show2.getRating()))
-                    return Double.compare(show1.getRating(), show2.getRating());
-                else return show1.getTitle().compareTo(show2.getTitle());
+               // if (!Objects.equals(show1.getRating(), show2.getRating()))
+                    return Double.compare(show2.getRating(), show1.getRating());
+               // else return show1.getTitle().compareTo(show2.getTitle());
             }
         });
     }
 
-    public void sortByNoOfFavourites(ArrayList<Show> favouriteVideos, ArrayList<User> users, String SortType){
+    public static void sortByNoOfFavourites(ArrayList<Show> favouriteVideos, ArrayList<User> users, String SortType){
         favouriteVideos.sort(new Comparator<>() {
             @Override
             public int compare(Show show1, Show show2) {
