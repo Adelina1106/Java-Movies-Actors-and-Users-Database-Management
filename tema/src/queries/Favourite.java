@@ -41,7 +41,8 @@ public class Favourite extends VideoQuery {
         String message = "Query result: [";
         for (Show show : favouriteShows)
             message = message + show.getTitle() + ", ";
-        message = message.substring(0, message.length() - 2);
+        if (favouriteShows.size() > 0)
+            message = message.substring(0, message.length() - 2);
         message = message + "]";
         org.json.simple.JSONObject object = writer.writeFile(actionInputData.getActionId(), null,
                 message);

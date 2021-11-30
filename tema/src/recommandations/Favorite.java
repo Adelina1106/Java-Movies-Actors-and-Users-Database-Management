@@ -26,12 +26,11 @@ public class Favorite {
         favoriteVideos.sort(new Comparator<>() {
             @Override
             public int compare(Show show1, Show show2) {
-                return Integer.compare(show1.getNoOfViews(users), show2.getNoOfViews(users));
+                return Integer.compare(show2.getTotalNoOfFavorites(users), show1.getTotalNoOfFavorites(users));
             }
         });
         favoriteVideos.removeIf((show) -> show.getNoOfViews(users) == 0);
         favoriteVideos.removeIf((show) -> user.getHistory().containsKey(show.getTitle()));
-        Collections.reverse(favoriteVideos);
         if (favoriteVideos.size() != 0)
             return favoriteVideos.get(0);
         return null;

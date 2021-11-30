@@ -1,7 +1,6 @@
 package videos;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Movie extends Show{
     private int duration;

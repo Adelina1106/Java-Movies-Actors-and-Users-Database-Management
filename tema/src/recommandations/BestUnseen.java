@@ -30,11 +30,9 @@ public class BestUnseen extends RecommendationForAllUsers {
         ratingVideos.sort(new Comparator<>() {
             @Override
             public int compare(Show show1, Show show2) {
-                return Double.compare(show1.getRating(), show2.getRating());
+                return Double.compare(show2.getRating(), show1.getRating());
             }
         });
-        //Collections.reverse(ratingVideos);
-        //ratingVideos.removeIf((show) -> show.getRating() == 0);
         if (ratingVideos.size() > 0)
             return ratingVideos.get(0);
         else return null;

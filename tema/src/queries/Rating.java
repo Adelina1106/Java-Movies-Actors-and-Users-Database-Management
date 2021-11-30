@@ -10,6 +10,8 @@ import videos.Show;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Objects;
 
 public class Rating extends VideoQuery {
 
@@ -27,12 +29,13 @@ public class Rating extends VideoQuery {
         sortByRating(ratingVideos);
         if (actionInputData.getSortType().equals("desc"))
             Collections.reverse(ratingVideos);
-        ratingVideos.removeIf((show) -> show.getRating().isNaN() || show.getRating() < 1d);
+        ratingVideos.removeIf((show) -> show.getRating() == null || show.getRating() < 1d );
         ArrayList<Show> ratings = new ArrayList<>();
-        if (actionInputData.getNumber() < ratingVideos.size() + 1)
+        if (actionInputData.getNumber() < ratingVideos.size()) {
             for (int i = 0; i < actionInputData.getNumber(); i++)
                 ratings.add(ratingVideos.get(i));
-        return ratings;
+            return ratings;
+        } else return ratingVideos;
     }
 
     static public JSONObject RatingQuery(ArrayList<Movie> movies, ArrayList<Serial> serials,

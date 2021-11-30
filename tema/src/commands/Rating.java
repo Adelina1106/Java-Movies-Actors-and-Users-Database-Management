@@ -12,7 +12,7 @@ import videos.Serial;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Rating{
+public class Rating {
 
     public void ratingShow(User user, Serial serial, Double grade, int season) {
         if (season <= serial.getSeasons().size()) {
@@ -30,7 +30,10 @@ public class Rating{
             user.getRatings().put(movie.getTitle(), grade);
         }
         movie.getRatings().add(grade);
-        movie.setRating((movie.getRating() + grade) / (movie.getRatings().size() + 1));
+
+        if (movie.getRating() != null)
+            movie.setRating((movie.getRating() + grade) / movie.getRatings().size());
+        else movie.setRating(grade / movie.getRatings().size());
     }
 
     public void setSerialRating(Serial serial) {
@@ -39,11 +42,13 @@ public class Rating{
         for (var season : serial.getSeasons()) {
             ratingSeason = 0d;
             for (var rating : season.getRatings())
-                ratingSeason = rating + ratingSeason;
-            ratingSeason = ratingSeason / (season.getRatings().size() + 1);
-            //serial.setRating(ratingValue / serial.getSeasons().size());
-            ratingValue = ratingSeason + ratingValue;
+                if (!rating.isNaN()) {
+                    ratingSeason = rating + ratingSeason;
+                    ratingSeason = ratingSeason / season.getRatings().size();
+                    ratingValue = ratingSeason + ratingValue;
+                }
         }
+
         serial.setRating(ratingValue / serial.getNumberOfSeasons());
     }
 
@@ -55,7 +60,7 @@ public class Rating{
         String message;
         if (!user.getHistory().containsKey(show.getTitle()))
             message = "error -> " + show.getTitle() + " is not seen";
-        else if (!user.getRatings().containsKey(show.getTitle()) && !user.getRatings().containsKey(show.getTitle() + actionInputData.getSeasonNumber()) ) {
+        else if (!user.getRatings().containsKey(show.getTitle()) && !user.getRatings().containsKey(show.getTitle() + actionInputData.getSeasonNumber())) {
             if (movies.contains(show))
                 rating.ratingShow(user, (Movie) show, actionInputData.getGrade());
             else rating.ratingShow(user, (Serial) show, actionInputData.getGrade(), actionInputData.getSeasonNumber());

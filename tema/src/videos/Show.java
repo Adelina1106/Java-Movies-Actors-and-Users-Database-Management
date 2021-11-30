@@ -34,9 +34,7 @@ public abstract class Show {
     public Show(String title, int year, ArrayList<String> cast, ArrayList<String> genres) {
         this.title = title;
         this.year = year;
-        //this.cast = new ArrayList<>();
         this.cast = cast;
-        //this.genres = new ArrayList<>();
         this.genres = genres;
     }
 

@@ -9,13 +9,13 @@ import videos.Show;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Actor {
     private String name;
     private String careerDescription;
     private ArrayList<String> filmography = new ArrayList<String>();
-    ;
     private Map<ActorsAwards, Integer> awards;
 
     public Actor(String name, String careerDescription, ArrayList<String> filmography, Map<ActorsAwards, Integer> awards) {
@@ -59,12 +59,18 @@ public class Actor {
 
     public Double getAverageGrade(ArrayList<Movie> movies, ArrayList<Serial> serials) {
         Double averageGrade = 0d;
+        int nr = 0;
         for (String name : this.getFilmography()) {
             Show show = Utils.findShow(movies, serials, name);
-            if (show != null && show.getRating() != null)
-                averageGrade = show.getRating() + averageGrade;
+            if (show != null) {
+                if (show.getRating() == null || Double.compare(show.getRating(),0d) == 0 )
+                    nr++;
+                if (show.getRating() != null)
+                    averageGrade = show.getRating() + averageGrade;
+            }
+            else nr++;
         }
-        averageGrade = averageGrade / this.getFilmography().size();
+        averageGrade = averageGrade / (this.getFilmography().size() - nr);
         return averageGrade;
     }
 
@@ -73,18 +79,24 @@ public class Actor {
         for (int i = 0; i < actionInputData.getFilters().size(); i++)
             if (i == 3)
                 for (String award : actionInputData.getFilters().get(i))
-                    if (this.getAwards().containsKey(Utils.stringToAwards(award)))
-                        noOfAwards = noOfAwards + this.getAwards().get(Utils.stringToAwards(award));
-                    else return 0;
+                    if (!this.getAwards().containsKey(Utils.stringToAwards(award)))
+                        return 0;
+        for (var entry : this.getAwards().entrySet())
+            noOfAwards = noOfAwards + entry.getValue();
         return noOfAwards;
     }
 
     public boolean hasKeywords(ActionInputData actionInputData) {
         for (int i = 0; i < actionInputData.getFilters().size(); i++)
             if (i == 2)
-                for (String keyword : actionInputData.getFilters().get(i))
-                    if (!this.getCareerDescription().contains(keyword))
+                for (String keyword : actionInputData.getFilters().get(i)) {
+
+                    if (!this.getCareerDescription().toLowerCase().contains(keyword.toLowerCase() + " ")
+                            && !this.getCareerDescription().toLowerCase().contains(keyword.toLowerCase() + ",")
+                            && !this.getCareerDescription().toLowerCase().contains(keyword.toLowerCase() + ".")
+                            && !this.getCareerDescription().toLowerCase().contains(keyword.toLowerCase() + "!"))
                         return false;
+                }
         return true;
     }
 }

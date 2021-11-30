@@ -10,6 +10,8 @@ import videos.Serial;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Objects;
 
 public class Award extends QueryActor {
 
@@ -19,7 +21,8 @@ public class Award extends QueryActor {
         ArrayList<Actor> awardsActors = new ArrayList<Actor>();
         for (Actor actor : actors)
             awardsActors.add(actor);
-        sortByNumberOfAwards(awardsActors, actionInputData);
+       awardsActors.removeIf((actor) -> actor.getTotalAwards(actionInputData) == 0);
+       sortByNumberOfAwards(awardsActors, actionInputData);
         awardsActors.removeIf((actor) -> actor.getTotalAwards(actionInputData) == 0);
         if (actionInputData.getSortType().equals("desc"))
             Collections.reverse(awardsActors);

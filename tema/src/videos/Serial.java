@@ -15,7 +15,6 @@ public class Serial extends Show {
                   int year) {
         super(title, year, cast, genres);
         this.numberOfSeasons = numberOfSeasons;
-        this.seasons = new ArrayList<Season>();
         this.seasons = seasons;
     }
 
