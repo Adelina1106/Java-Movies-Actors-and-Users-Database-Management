@@ -1,9 +1,10 @@
 Noiembrie 2021
 Rizea Adelina-Maria 324CA
+Tema 1 - OOP 
 ---------------------------------VideosDB----------------------------------
 
 	Punctul de plecare al platformei implementate se regaseste in clasa
-ActionsSolver(pachetul platform), in care se realizeaza parsarea datelor de
+ActionsSolver(pachetul database), in care se realizeaza parsarea datelor de
 input si crearea propriilor ArrayLists avand ca tip clasele proprii create
 pentru rezolvarea actiunilor(Show, Serial, Movie, Actor, User). Metoda start,
 entry point-ul implementarii, executa actiunile pe masura ce acestea sunt

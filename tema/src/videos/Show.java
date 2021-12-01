@@ -190,8 +190,8 @@ public abstract class Show {
     }
 
     /**
-     * @param user            user for whom the command applies
-     * @param grade           the rating to be given
+     * @param user user for whom the command applies
+     * @param grade the rating to be given
      * @param actionInputData information about the action
      */
     public abstract void ratingShow(User user, double grade, ActionInputData actionInputData);

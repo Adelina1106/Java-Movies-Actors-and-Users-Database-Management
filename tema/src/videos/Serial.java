@@ -86,7 +86,8 @@ public final class Serial extends Show {
             if (user.getHistory().containsKey(this.getTitle())
                     && !user.getRatings().containsKey(this.getTitle() + season)) {
                 this.getSeasons().get(season - 1).getRatings().add(grade);
-                //the rated season is also added at the final of the name in the ratings map
+                //the number rated season is also added at the final of the
+                //name in the ratings map
                 user.getRatings().put(this.getTitle() + season, grade);
             }
             this.setSerialRating(this);

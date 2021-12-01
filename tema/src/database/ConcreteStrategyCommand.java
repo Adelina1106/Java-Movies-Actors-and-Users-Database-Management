@@ -1,4 +1,4 @@
-package platform;
+package database;
 
 import actors.Actor;
 import commands.Favorite;

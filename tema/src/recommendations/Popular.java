@@ -102,11 +102,11 @@ public final class Popular {
     /**
      * Executes the popular recommendation
      *
-     * @param users           ArrayList with all the users
-     * @param movies          ArrayList with all the movies
-     * @param serials         ArrayList with all the serials
+     * @param users ArrayList with all the users
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
      * @param actionInputData information about the action
-     * @param writer          used for transforming the output in a JSONObject
+     * @param writer used for transforming the output in a JSONObject
      * @return JSONObject with the result message
      */
     public static JSONObject popularRecommendation(final ArrayList<User> users,
@@ -116,14 +116,14 @@ public final class Popular {
                                                    final Writer writer) throws IOException {
         Popular popular = new Popular();
         User user = Utils.findUser(users, actionInputData.getUsername());
+        Show popularShow = popular.getPopular(user, users, movies, serials);
         String message = null;
         if (user != null) {
             if (!user.getSubscriptionType().equals("PREMIUM")
                     || popular.getPopular(user, users, movies, serials) == null) {
                 message = "PopularRecommendation cannot be applied!";
-            } else {
-                message = "PopularRecommendation result: "
-                        + popular.getPopular(user, users, movies, serials).getTitle();
+            } else if (popularShow != null) {
+                message = "PopularRecommendation result: " + popularShow.getTitle();
             }
         }
         return writer.writeFile(actionInputData.getActionId(), null,
