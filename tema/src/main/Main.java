@@ -73,7 +73,6 @@ public final class Main {
 
         ActionsSolver platform = new ActionsSolver();
         platform.start(input, arrayResult, fileWriter);
-        System.out.println(arrayResult);
 
         fileWriter.closeJSON(arrayResult);
     }
