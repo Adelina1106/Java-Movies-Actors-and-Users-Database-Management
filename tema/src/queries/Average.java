@@ -1,6 +1,6 @@
 package queries;
 
-import actor.Actor;
+import actors.Actor;
 import fileio.ActionInputData;
 import fileio.Writer;
 import org.json.simple.JSONObject;
@@ -9,35 +9,58 @@ import videos.Serial;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class Average extends QueryActor {
+public final class Average extends ActorQuery {
 
-    public ArrayList<Actor> getAverageActors(ArrayList<Actor> actors, ArrayList<Movie> movies,
-                                             ArrayList<Serial> serials, int N, String SortType) {
+    /**
+     * Gets the first N actors sorted by average rating of the films
+     * and series in which the actors played
+     *
+     * @param actors ArrayList with all the actors
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @return ArrayList with the first N actors
+     */
+    public ArrayList<Actor> getAverageActors(final ArrayList<Actor> actors,
+                                             final ArrayList<Movie> movies,
+                                             final ArrayList<Serial> serials,
+                                             final ActionInputData actionInputData) {
         ArrayList<Actor> averageActors = new ArrayList<>(actors);
-        sortByGrade(movies, serials, averageActors);
-        averageActors.removeIf((actor) -> actor.getAverageGrade(movies, serials) == -1d);
+        sortByGrade(movies, serials, averageActors, actionInputData);
         averageActors.removeIf((actor) -> actor.getAverageGrade(movies, serials).isNaN());
-        if (SortType.equals("desc"))
-            Collections.reverse(averageActors);
         ArrayList<Actor> average = new ArrayList<>();
-        if (N < averageActors.size() + 1) {
-            for (int i = 0; i < N; i++){
-                average.add(averageActors.get(i));}
+
+        //gets the first N actors from the ArrayList
+        if (actionInputData.getNumber() < averageActors.size() + 1) {
+            for (int i = 0; i < actionInputData.getNumber(); i++) {
+                average.add(averageActors.get(i));
+            }
             return average;
-        } else return averageActors;
+        } else {
+            return averageActors;
+        }
     }
 
-    static public JSONObject AverageQuery(ArrayList<Actor> actors, ArrayList<Movie> movies, ArrayList<Serial> serials,
-                                          ActionInputData actionInputData, Writer writer) throws IOException {
+    /**
+     * Executes the average query
+     *
+     * @param actors ArrayList with all the actors
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @param writer used for transforming the output in a JSONObject
+     * @return JSONObject with the result message
+     */
+    public static JSONObject averageQuery(final ArrayList<Actor> actors,
+                                          final ArrayList<Movie> movies,
+                                          final ArrayList<Serial> serials,
+                                          final ActionInputData actionInputData,
+                                          final Writer writer) throws IOException {
         Average average = new Average();
-        ArrayList<Actor> averageGradeActors = average.getAverageActors(actors, movies, serials, actionInputData.getNumber(), actionInputData.getSortType());
-        String message = "Query result: [";
-        for (Actor actor : averageGradeActors)
-            message = message + actor.getName() + ", ";
-        message = message.substring(0, message.length() - 2);
-        message = message + "]";
-        return  writer.writeFile(actionInputData.getActionId(), null, message);
+        ArrayList<Actor> averageGradeActors = average.getAverageActors(actors, movies,
+                serials, actionInputData);
+        return writer.writeFile(actionInputData.getActionId(), null,
+                average.getMessage(averageGradeActors));
     }
 }

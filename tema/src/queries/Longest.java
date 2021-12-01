@@ -9,42 +9,42 @@ import videos.Show;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Longest extends VideoQuery {
-    public ArrayList<Show> getVideosByDuration(ArrayList<Movie> movies,
-                                              ArrayList<Serial> serials, ActionInputData actionInputData) {
-        ArrayList<Show> videosByDuration = new ArrayList<Show>();
-        if (actionInputData.getObjectType().equals("movies"))
-            for (Show show : movies)
-                if (show.hasCriteria(actionInputData))
-                videosByDuration.add(show);
-        if (actionInputData.getObjectType().equals("shows"))
-            for (Show show : serials)
-                if (show.hasCriteria(actionInputData))
-                videosByDuration.add(show);
-        sortByDuration(videosByDuration, actionInputData.getSortType());
-        videosByDuration.removeIf((show) -> show.getDuration() == 0);
-        ArrayList<Show> ratings = new ArrayList<>();
-        if (actionInputData.getNumber() < videosByDuration.size() + 1){
-            for (int i = 0; i < actionInputData.getNumber(); i++)
-                ratings.add(videosByDuration.get(i));
-            return ratings;
-            }
-        else return videosByDuration;
+public final class Longest extends ShowQuery {
+    /**
+     * Gets the first N videos sorted by their duration
+     *
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @return List with N videos
+     */
+    public List<Show> getVideosByDuration(final ArrayList<Movie> movies,
+                                          final ArrayList<Serial> serials,
+                                          final ActionInputData actionInputData) {
+        List<Show> showsByDuration = getShowsList(movies, serials, actionInputData);
+        sortByDuration(showsByDuration, actionInputData);
+        showsByDuration.removeIf((show) -> show.getDuration() == 0);
+        return getShows(actionInputData, showsByDuration);
     }
 
-    static public JSONObject LongestQuery(ArrayList<Movie> movies, ArrayList<Serial> serials,
-                                          ActionInputData actionInputData, Writer writer) throws IOException {
+    /**
+     * Executes longest query
+     *
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @param writer used for transforming the output in a JSONObject
+     * @return JSONObject with the result message
+     */
+    public static JSONObject longestQuery(final ArrayList<Movie> movies,
+                                          final ArrayList<Serial> serials,
+                                          final ActionInputData actionInputData,
+                                          final Writer writer) throws IOException {
         Longest longest = new Longest();
-        ArrayList<Show> videosByDuration = longest.getVideosByDuration(movies, serials, actionInputData);
-        String message = "Query result: [";
-        for (Show show : videosByDuration)
-            message = message + show.getTitle() + ", ";
-        if (videosByDuration.size() > 0)
-            message = message.substring(0, message.length() - 2);
-        message = message + "]";
-        org.json.simple.JSONObject object = writer.writeFile(actionInputData.getActionId(), null,
-                message);
-        return object;
+        List<Show> videosByDuration = longest.getVideosByDuration(movies, serials, actionInputData);
+        return writer.writeFile(actionInputData.getActionId(), null,
+                longest.getMessage(videosByDuration));
     }
 }

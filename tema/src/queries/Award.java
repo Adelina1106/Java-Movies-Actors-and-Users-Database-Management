@@ -1,46 +1,44 @@
 package queries;
 
-import actor.Actor;
+import actors.Actor;
 import fileio.ActionInputData;
 import fileio.Writer;
 import org.json.simple.JSONObject;
-import videos.Movie;
-import videos.Serial;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
 
-public class Award extends QueryActor {
+public final class Award extends ActorQuery {
 
-    public ArrayList<Actor> getAwards(ArrayList<Actor> actors, ArrayList<Movie> movies,
-                                      ArrayList<Serial> serials,
-                                      ActionInputData actionInputData) {
-        ArrayList<Actor> awardsActors = new ArrayList<Actor>();
-        for (Actor actor : actors)
-            awardsActors.add(actor);
-       awardsActors.removeIf((actor) -> actor.getTotalAwards(actionInputData) == 0);
-       sortByNumberOfAwards(awardsActors, actionInputData);
+    /**
+     * Gets the actors that have all the awards from query
+     *
+     * @param actors ArrayList with all the actors
+     * @param actionInputData information about input action
+     * @return ArrayList with all actors with the awards from query
+     */
+    public ArrayList<Actor> getAwards(final ArrayList<Actor> actors,
+                                      final ActionInputData actionInputData) {
+        ArrayList<Actor> awardsActors = new ArrayList<>(actors);
         awardsActors.removeIf((actor) -> actor.getTotalAwards(actionInputData) == 0);
-        if (actionInputData.getSortType().equals("desc"))
-            Collections.reverse(awardsActors);
+        sortByNumberOfAwards(awardsActors, actionInputData);
         return awardsActors;
     }
 
-    static public JSONObject AwardQuery(ArrayList<Actor> actors, ArrayList<Movie> movies, ArrayList<Serial> serials,
-                                        ActionInputData actionInputData, Writer writer) throws IOException {
+    /**
+     * Executes the award query
+     *
+     * @param actors ArrayList with all the actors
+     * @param actionInputData information about the action
+     * @param writer used for transforming the output in a JSONObject
+     * @return JSONObject with the result message
+     */
+    public static JSONObject awardQuery(final ArrayList<Actor> actors,
+                                        final ActionInputData actionInputData,
+                                        final Writer writer) throws IOException {
         Award award = new Award();
-        ArrayList<Actor> awardsActors = award.getAwards(actors, movies, serials, actionInputData);
-        String message = "Query result: [";
-        for (Actor actor : awardsActors)
-            message = message + actor.getName() + ", ";
-        if (awardsActors.size() > 0)
-            message = message.substring(0, message.length() - 2);
-        message = message + "]";
-        org.json.simple.JSONObject object = writer.writeFile(actionInputData.getActionId(), null,
-                message);
-        return object;
+        ArrayList<Actor> awardsActors = award.getAwards(actors, actionInputData);
+        return writer.writeFile(actionInputData.getActionId(), null,
+                award.getMessage(awardsActors));
     }
 }

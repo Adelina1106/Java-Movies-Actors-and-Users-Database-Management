@@ -7,7 +7,7 @@ import fileio.Input;
 import fileio.InputLoader;
 import fileio.Writer;
 import org.json.simple.JSONArray;
-import platform.Platform;
+import platform.ActionsSolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 /**
- * The entry point to this homework. It runs the checker that tests your implentation.
+ * The entry point to this homework. It runs the checker that tests your implementation.
  */
 public final class Main {
     /**
@@ -71,8 +71,8 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        //TODO add here the entry point to your implementation
-        Platform.getPlatform().start(input, arrayResult, fileWriter);
+        ActionsSolver platform = new ActionsSolver();
+        platform.start(input, arrayResult, fileWriter);
         System.out.println(arrayResult);
 
         fileWriter.closeJSON(arrayResult);

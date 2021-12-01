@@ -1,6 +1,6 @@
 package utils;
 
-import actor.ActorsAwards;
+import actors.ActorsAwards;
 import common.Constants;
 import entertainment.Genre;
 import org.json.simple.JSONArray;
@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 
 /**
  * The class contains static methods that helps with parsing.
- *
+ * <p>
  * We suggest you add your static methods here or in a similar class.
  */
 public final class Utils {
@@ -28,6 +28,7 @@ public final class Utils {
 
     /**
      * Transforms a string into an enum
+     *
      * @param genre of video
      * @return an Genre Enum
      */
@@ -59,6 +60,7 @@ public final class Utils {
 
     /**
      * Transforms a string into an enum
+     *
      * @param award for actors
      * @return an ActorsAwards Enum
      */
@@ -75,6 +77,7 @@ public final class Utils {
 
     /**
      * Transforms an array of JSON's into an array of strings
+     *
      * @param array of JSONs
      * @return a list of strings
      */
@@ -92,8 +95,9 @@ public final class Utils {
 
     /**
      * Transforms an array of JSON's into a map
+     *
      * @param jsonActors array of JSONs
-     * @return a map with ActorsAwardsa as key and Integer as value
+     * @return a map with ActorsAwards as key and Integer as value
      */
     public static Map<ActorsAwards, Integer> convertAwards(final JSONArray jsonActors) {
         Map<ActorsAwards, Integer> awards = new LinkedHashMap<>();
@@ -109,6 +113,7 @@ public final class Utils {
 
     /**
      * Transforms an array of JSON's into a map
+     *
      * @param movies array of JSONs
      * @return a map with String as key and Integer as value
      */
@@ -128,22 +133,43 @@ public final class Utils {
         return mapVideos;
     }
 
-    static public User findUser(ArrayList<User> users, String username){
-        for (User user : users)
-            if (user.getUsername().equals(username))
+    /**
+     * Finds user by name
+     *
+     * @param users ArrayList with all the users
+     * @param username username of the searched user
+     * @return user with the given name
+     */
+    public static User findUser(final ArrayList<User> users, final String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
                 return user;
+            }
+        }
         return null;
     }
 
-    static public Show findShow(ArrayList<Movie> movies, ArrayList<Serial> serials, String name){
-        for (var movie : movies)
-            if (movie.getTitle().equals(name) ){
+    /**
+     * Finds show by title
+     *
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param title title of the searched show
+     * @return show with the given title
+     */
+    public static Show findShow(final ArrayList<Movie> movies,
+                                final ArrayList<Serial> serials,
+                                final String title) {
+        for (var movie : movies) {
+            if (movie.getTitle().equals(title)) {
                 return movie;
             }
-        for (var serial : serials)
-            if (serial.getTitle().equals(name) ){
+        }
+        for (var serial : serials) {
+            if (serial.getTitle().equals(title)) {
                 return serial;
             }
+        }
         return null;
     }
 }

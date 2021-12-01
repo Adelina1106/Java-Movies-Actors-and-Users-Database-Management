@@ -1,4 +1,4 @@
-package actor;
+package actors;
 
 /**
  * Awards for actors to be used for queries

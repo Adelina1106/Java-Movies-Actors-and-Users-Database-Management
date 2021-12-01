@@ -10,42 +10,47 @@ import videos.Show;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MostViewed extends VideoQuery{
-    public ArrayList<Show> getVideosByViews(ArrayList<User> users, ArrayList<Movie> movies,
-                                            ArrayList<Serial> serials, ActionInputData actionInputData) {
-        ArrayList<Show> videosByViews = new ArrayList<Show>();
-        if (actionInputData.getObjectType().equals("movies"))
-            for (Show show : movies)
-                if (show.hasCriteria(actionInputData))
-                    videosByViews.add(show);
-        if (actionInputData.getObjectType().equals("shows"))
-            for (Show show : serials)
-                if (show.hasCriteria(actionInputData))
-                    videosByViews.add(show);
-        sortByNoOfViews(videosByViews, actionInputData.getSortType(), users);
-        videosByViews.removeIf((show) -> show.getNoOfViews(users) == 0);
-        ArrayList<Show> views = new ArrayList<>();
-        if (actionInputData.getNumber() < videosByViews.size() + 1){
-            for (int i = 0; i < actionInputData.getNumber(); i++)
-                views.add(videosByViews.get(i));
-            return views;
-        }
-        else return videosByViews;
+public final class MostViewed extends ShowQuery {
+    /**
+     * Gets the first N videos sorted by number of views
+     *
+     * @param users ArrayList with all the users
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @return List with videos
+     */
+    public List<Show> getVideosByViews(final ArrayList<User> users,
+                                       final ArrayList<Movie> movies,
+                                       final ArrayList<Serial> serials,
+                                       final ActionInputData actionInputData) {
+        List<Show> showsByViews = getShowsList(movies, serials, actionInputData);
+        sortByNoOfViews(showsByViews, actionInputData, users);
+        showsByViews.removeIf((show) -> show.getNoOfViews(users) == 0);
+        return getShows(actionInputData, showsByViews);
     }
 
-    static public JSONObject MostViewedQuery(ArrayList<User> users, ArrayList<Movie> movies, ArrayList<Serial> serials,
-                                          ActionInputData actionInputData, Writer writer) throws IOException {
+    /**
+     * Executes most viewed query
+     *
+     * @param users ArrayList with all the users
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @param writer used for transforming the output in a JSONObject
+     * @return JSONObject with the result message
+     */
+    public static JSONObject mostViewedQuery(final ArrayList<User> users,
+                                             final ArrayList<Movie> movies,
+                                             final ArrayList<Serial> serials,
+                                             final ActionInputData actionInputData,
+                                             final Writer writer) throws IOException {
         MostViewed mostViewed = new MostViewed();
-        ArrayList<Show> videosByViews = mostViewed.getVideosByViews(users, movies, serials, actionInputData);
-        String message = "Query result: [";
-        for (Show show : videosByViews)
-            message = message + show.getTitle() + ", ";
-        if (videosByViews.size() > 0)
-            message = message.substring(0, message.length() - 2);
-        message = message + "]";
-        org.json.simple.JSONObject object = writer.writeFile(actionInputData.getActionId(), null,
-                message);
-        return object;
+        List<Show> showsByViews = mostViewed.getVideosByViews(users, movies,
+                serials, actionInputData);
+        return writer.writeFile(actionInputData.getActionId(), null,
+                mostViewed.getMessage(showsByViews));
     }
 }

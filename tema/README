@@ -1,38 +1,54 @@
-Object Oriented Programming Course
-Homework - VideosDB
+Noiembrie 2021
+Rizea Adelina-Maria 324CA
+---------------------------------VideosDB----------------------------------
 
-November 2021
+	Punctul de plecare al platformei implementate se regaseste in clasa
+ActionsSolver(pachetul platform), in care se realizeaza parsarea datelor de
+input si crearea propriilor ArrayLists avand ca tip clasele proprii create
+pentru rezolvarea actiunilor(Show, Serial, Movie, Actor, User). Metoda start,
+entry point-ul implementarii, executa actiunile pe masura ce acestea sunt
+primite, selectand (folosind strategy pattern) metodele pentru prelucrarea
+datelor in functie de actiunea primita (comanda, recomandare sau query).
 
-# Info
-https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema
+	Clasele Serial, Movie, Actor si User implementeaza metode folosite
+pentru realizarea actiunilor date. Clasa abstracta Show este mostenita de
+clasele Movie si Serial, acestea implementand metodele abstracte din metoda
+parinte ce au rezolvari diferite pentru fiecare tip de video (getDuration,
+ratingShow).
 
-# About the code
+	In cazul comenzilor, dupa alegerea tipului de comanda(in 
+ConcreteStrategyCommand), sunt apelate metodele statice pentru realizarea
+acestora din fiecare dintre clasele Favorite, Rating, View (pachetul command).
+Fiecare dintre aceste clase are cate o metoda ce realizeaza prelucrarea in sine
+a datelor(adaugarea in listele de favorite sau in istoric, adaugarea si
+setarea noului rating) si metoda statica pentru mesajul rezultat.
 
-We provide the input tests, the logic that parses them and the checker that runs them.
+	In cazul query-urilor, dupa alegerea tipului (ConcreteStrategyQuery),
+sunt, de asemenea, apelate metodele statice ce se regasesc in clasele
+ce corespund fiecarui tip: Average, Award, Favorite, FilterDescription,
+Longest, MostViewed, NumberOfRatings si Rating. Fiecare dintre
+ele are cate o metoda ce intoarce lista cu tipul de obiecte cerut dupa 
+criteriile date, aceasta fiind folosita in metodele statice de realizare
+a query-ului pentru mesajul ce trebuie afisat. De asemenea, fiecare dintre
+acestea mosteneste, in functie de obiectul cautarii, una din clasele ShowQuery,
+ActorQuery sau UserQuery.Ele implementeaza metode pentru sortarea dupa
+anumite criterii, returnarea mesajului actiunii(UserQuery, ActorQuery) sau 
+returnarea unor liste de video-uri(ShowQuery).
 
-* test_db - contains the tests in JSON format
-* src
-   * checker - the checker's sources including the checkstyle necessary files, not to be modified
-   * fileio - classes for parsing the input files, not to be modified
-   * common, utils
-        * contain utility classes with constants and static methods
-        * you can add your own functionality in the existing classes or add new classes as well
-   * actor
-        * contains an enum for the types of awards an actor can have - do not modify it
-        * you can add here your actor related classes
-   * entertainment
-        * contains an enum for the supported video genres - do not modify it
-        * class for representing a Season of a tv show - do not modify it
-        * you can add here your entertainment related classes
+	Pentru recomandari, alegerea tipului se realizeaza in
+ConcreteStrategyRecommendation, unde se apeleaza metodele statice din clasele
+BestUnseen, Favorite, Popular, Search si Standard(pachetul recommendations).
+Aceste clase prezinta implementarea pentru cate un tip de recomandare,
+metodele statice pentru aflarea mesajului corespunzator apeland cate o metoda
+ce returneaza video-ul ce respecta criteriile cerute in cadrul actiunii.
+In cazul clasei Popular, ea contine mai multe metode ce afla video-ul cerut
+prin realizarea unei liste de genuri sortate crescator dupa popularitate si
+gasirea primului show nevazut cu cel mai popular gen.
 
-We encourage you to organize your implementation in packages based on the functionality their classes offer. Try to keep
-your code modular, readable and documented.
+	In clasa Utils am adaugat 2 metode statice, findUser si findShow, ce gasesc
+utilizatorul si show-ul cerut dupa username/titlu, acestea fiind utilizate in
+cadrul diferitelor actiuni pentru a gasi utilizatorul/show-ul asupra caruia se
+aplica acestea.
 
-# Testing
 
-The Main class runs the checker on your implementation. Add the entry point to your implementation in it.
 
-Run Main to test your implementation from the IDE or from command line.
-
-Run the main method from Test class with the name of the input file from the command line and the result will be written
-to the out.txt file. Thus, you can compare this result with ref.

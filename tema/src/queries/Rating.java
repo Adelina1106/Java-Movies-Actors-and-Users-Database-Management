@@ -9,47 +9,42 @@ import videos.Show;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.List;
 
-public class Rating extends VideoQuery {
-
-    public ArrayList<Show> getVideosByRating(ArrayList<Movie> movies,
-                                             ArrayList<Serial> serials, ActionInputData actionInputData) {
-        ArrayList<Show> ratingVideos = new ArrayList<Show>();
-        if (actionInputData.getObjectType().equals("movies"))
-            for (Show show : movies)
-                if (show.hasCriteria(actionInputData))
-                    ratingVideos.add(show);
-        if (actionInputData.getObjectType().equals("shows"))
-            for (Show show : serials)
-                if (show.hasCriteria(actionInputData))
-                    ratingVideos.add(show);
-        sortByRating(ratingVideos);
-        if (actionInputData.getSortType().equals("desc"))
-            Collections.reverse(ratingVideos);
-        ratingVideos.removeIf((show) -> show.getRating() == null || show.getRating() < 1d );
-        ArrayList<Show> ratings = new ArrayList<>();
-        if (actionInputData.getNumber() < ratingVideos.size()) {
-            for (int i = 0; i < actionInputData.getNumber(); i++)
-                ratings.add(ratingVideos.get(i));
-            return ratings;
-        } else return ratingVideos;
+public class Rating extends ShowQuery {
+    /**
+     * Gets the first N videos sorted by rating
+     *
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @return List with N videos
+     */
+    public List<Show> getVideosByRating(final ArrayList<Movie> movies,
+                                        final ArrayList<Serial> serials,
+                                        final ActionInputData actionInputData) {
+        List<Show> ratingShows = getShowsList(movies, serials, actionInputData);
+        sortByRating(ratingShows, actionInputData);
+        ratingShows.removeIf((show) -> show.getRating() < 1);
+        return getShows(actionInputData, ratingShows);
     }
 
-    static public JSONObject RatingQuery(ArrayList<Movie> movies, ArrayList<Serial> serials,
-                                         ActionInputData actionInputData, Writer writer) throws IOException {
+    /**
+     * Executes the rating query
+     *
+     * @param movies ArrayList with all the movies
+     * @param serials ArrayList with all the serials
+     * @param actionInputData information about the action
+     * @param writer used for transforming the output in a JSONObject
+     * @return JSONObject with the result message
+     */
+    public static JSONObject ratingQuery(final ArrayList<Movie> movies,
+                                         final ArrayList<Serial> serials,
+                                         final ActionInputData actionInputData,
+                                         final Writer writer) throws IOException {
         Rating rating = new Rating();
-        ArrayList<Show> videosByRating = rating.getVideosByRating(movies, serials, actionInputData);
-        String message = "Query result: [";
-        for (Show show : videosByRating)
-            message = message + show.getTitle() + ", ";
-        if (videosByRating.size() > 0)
-            message = message.substring(0, message.length() - 2);
-        message = message + "]";
-        org.json.simple.JSONObject object = writer.writeFile(actionInputData.getActionId(), null,
-                message);
-        return object;
+        List<Show> showsByRating = rating.getVideosByRating(movies, serials, actionInputData);
+        return writer.writeFile(actionInputData.getActionId(), null,
+                rating.getMessage(showsByRating));
     }
 }
