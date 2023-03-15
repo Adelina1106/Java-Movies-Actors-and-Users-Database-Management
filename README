@@ -1,0 +1,54 @@
+Noiembrie 2021
+Rizea Adelina-Maria
+---------------------------------VideosDB----------------------------------
+
+	Punctul de plecare al platformei implementate se regaseste in clasa
+ActionsSolver(pachetul database), in care se realizeaza parsarea datelor de
+input si crearea propriilor ArrayLists avand ca tip clasele proprii create
+pentru rezolvarea actiunilor(Show, Serial, Movie, Actor, User). Metoda start,
+entry point-ul implementarii, executa actiunile pe masura ce acestea sunt
+primite, selectand (folosind strategy pattern) metodele pentru prelucrarea
+datelor in functie de actiunea primita (comanda, recomandare sau query).
+
+	Clasele Serial, Movie, Actor si User implementeaza metode folosite
+pentru realizarea actiunilor date. Clasa abstracta Show este mostenita de
+clasele Movie si Serial, acestea implementand metodele abstracte din metoda
+parinte ce au rezolvari diferite pentru fiecare tip de video (getDuration,
+ratingShow).
+
+	In cazul comenzilor, dupa alegerea tipului de comanda(in 
+ConcreteStrategyCommand), sunt apelate metodele statice pentru realizarea
+acestora din fiecare dintre clasele Favorite, Rating, View (pachetul command).
+Fiecare dintre aceste clase are cate o metoda ce realizeaza prelucrarea in sine
+a datelor(adaugarea in listele de favorite sau in istoric, adaugarea si
+setarea noului rating) si metoda statica pentru mesajul rezultat.
+
+	In cazul query-urilor, dupa alegerea tipului (ConcreteStrategyQuery),
+sunt, de asemenea, apelate metodele statice ce se regasesc in clasele
+ce corespund fiecarui tip: Average, Award, Favorite, FilterDescription,
+Longest, MostViewed, NumberOfRatings si Rating. Fiecare dintre
+ele are cate o metoda ce intoarce lista cu tipul de obiecte cerut dupa 
+criteriile date, aceasta fiind folosita in metodele statice de realizare
+a query-ului pentru mesajul ce trebuie afisat. De asemenea, fiecare dintre
+acestea mosteneste, in functie de obiectul cautarii, una din clasele ShowQuery,
+ActorQuery sau UserQuery.Ele implementeaza metode pentru sortarea dupa
+anumite criterii, returnarea mesajului actiunii(UserQuery, ActorQuery) sau 
+returnarea unor liste de video-uri(ShowQuery).
+
+	Pentru recomandari, alegerea tipului se realizeaza in
+ConcreteStrategyRecommendation, unde se apeleaza metodele statice din clasele
+BestUnseen, Favorite, Popular, Search si Standard(pachetul recommendations).
+Aceste clase prezinta implementarea pentru cate un tip de recomandare,
+metodele statice pentru aflarea mesajului corespunzator apeland cate o metoda
+ce returneaza video-ul ce respecta criteriile cerute in cadrul actiunii.
+In cazul clasei Popular, ea contine mai multe metode ce afla video-ul cerut
+prin realizarea unei liste de genuri sortate crescator dupa popularitate si
+gasirea primului show nevazut cu cel mai popular gen.
+
+	In clasa Utils am adaugat 2 metode statice, findUser si findShow, ce gasesc
+utilizatorul si show-ul cerut dupa username/titlu, acestea fiind utilizate in
+cadrul diferitelor actiuni pentru a gasi utilizatorul/show-ul asupra caruia se
+aplica acestea.
+
+
+
